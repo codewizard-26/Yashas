@@ -5,8 +5,8 @@ const {
   text,
 } = require("drizzle-orm/pg-core");
 
-export const userStatuses = pgTable("user_statuses", {
+export const organizationTypes = pgTable("organisation_types", {
   id: uuid("id").defaultRandom().primaryKey(),
-  statusName: varchar("status_name", { length: 50 }).notNull().unique(),
+  typeName: varchar("type_name", { length: 50 }).notNull().unique(),
   description: text("description"),
 });

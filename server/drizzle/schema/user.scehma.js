@@ -1,10 +1,10 @@
-const { jsonb } = require("drizzle-orm/pg-core");
 const { userStatuses } = require("./userStatuses.schema");
 const {
   pgTable,
   uuid,
   varchar,
   text,
+  jsonb,
   timestamp,
 } = require("drizzle-orm/pg-core");
 
