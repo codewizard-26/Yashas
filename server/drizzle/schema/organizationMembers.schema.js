@@ -11,7 +11,7 @@ const {
   
 } = require("drizzle-orm/pg-core");
 
-export const OrganizationMembers = pgTable("OrganizationMembers",{
+export const organizationMembers = pgTable("organizationMembers",{
   id: uuid("id").defaultRandom().primaryKey(),
   userid: uuid("user_id").reference(() => usersid.id).notNull(),
   organizationid: uuid("organization_id").reference(() => organizationid.id).notNull(),
