@@ -10,7 +10,7 @@ const {
   timestamp,
 } = require("drizzle-orm/pg-core");
 
-export const documents = pgTable("documents", {
+const documents = pgTable("documents", {
     id: uuid("id").defaultRandom().primaryKey(),
     userId: uuid("user_id").references(() => users.id).notNull(),
     documentTypeId: uuid("document_type_id").references(() => documentTypes.id).notNull(),
@@ -19,3 +19,5 @@ export const documents = pgTable("documents", {
     file_url: text("file_url").notNull(),
     uploadedAt: timestamp("uploaded_at", ).defaultNow()
 });
+
+module.exports = { documents };

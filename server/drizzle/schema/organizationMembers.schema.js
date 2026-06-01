@@ -3,7 +3,7 @@ const {organization} = require("./organization.schema.js");
 const {} = require("./");
 
 const {
-  PgTable,
+  pgTable,
   uuid,
   date,
   boolean,
@@ -11,7 +11,7 @@ const {
   
 } = require("drizzle-orm/pg-core");
 
-export const organizationMembers = pgTable("organizationMembers",{
+const organizationMembers = pgTable("organizationMembers",{
   id: uuid("id").defaultRandom().primaryKey(),
   userid: uuid("user_id").reference(() => users.id).notNull(),
   organizationid: uuid("organization_id").reference(() => organization.id).notNull(),
@@ -21,4 +21,7 @@ export const organizationMembers = pgTable("organizationMembers",{
   enddate: date("end_date"),
   isActive: boolean("is_active"),
   createdAt: timestamp("created_at").defaultNow(),
-})
+});
+
+module.exports = { organizationMembers };
+

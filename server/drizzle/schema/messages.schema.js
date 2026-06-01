@@ -9,7 +9,7 @@ const {
   timestamp,
 } = require("drizzle-orm/pg-core");
 
-export const messages = pgTable("messages", {
+const messages = pgTable("messages", {
     id: uuid("id").defaultRandom().primaryKey(),
     senderId: uuid("sender_id").references(() => users.id).notNull(),
     recieverId: uuid("reciever_id").references(() => users.id).notNull(),
@@ -19,3 +19,5 @@ export const messages = pgTable("messages", {
     seen: boolean("seen", ).default(false),
     createdAt: timestamp("created_at", ).defaultNow()
 });
+
+module.exports = { messages };
