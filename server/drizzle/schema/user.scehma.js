@@ -8,7 +8,7 @@ const {
   timestamp,
 } = require("drizzle-orm/pg-core");
 
-export const users = pgTable("users", {
+const users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
   fullName: varchar("full_name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255, }).unique().notNull(),
@@ -25,3 +25,5 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+module.exports = { users };
