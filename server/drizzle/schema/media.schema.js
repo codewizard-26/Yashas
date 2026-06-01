@@ -3,6 +3,8 @@ const { users } = require("./user.scehma");
 const {
   pgTable,
   uuid,
+  text,
+  varchar,
   timestamp,
 } = require("drizzle-orm/pg-core");
 

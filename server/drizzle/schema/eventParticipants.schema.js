@@ -6,11 +6,11 @@ const {
   timestamp,
 } = require("drizzle-orm/pg-core");
 
-const connections = pgTable("connections", {
+const eventParticipants = pgTable("event_participants", {
     id: uuid("id").defaultRandom().primaryKey(),
     userId: uuid("user_id").references(() => users.id).notNull(),
     eventId: uuid("event_id").references(() => events.id).notNull(),
     joinedAt: timestamp("joined_at", ).defaultNow()
 });
 
-module.exports = {connections};
+module.exports = {eventParticipants};

@@ -1,5 +1,5 @@
 const { organizationTypes } = require("./organizationTypes.schema");
-const { organizationVerificationStatus, oorganizationVerificationStatuses } = require("./organizationVerificationStatuses.schema");
+const { organizationVerificationStatuses } = require("./organizationVerificationStatuses.schema");
 const { users } = require("./user.scehma");
 const {
   pgTable,
@@ -22,7 +22,7 @@ const organizations = pgTable("organizations", {
   logo: text("logo", ),
   description: text("description").notNull(),
   website: text("website"),
-  organizationVerificationStatusId: uuid("organization_verification_status_id").references(() => oorganizationVerificationStatuses.id).notNull(),
+  organizationVerificationStatusId: uuid("organization_verification_status_id").references(() => organizationVerificationStatuses.id).notNull(),
   verifiedByUserId: uuid("verified_by_user_id").references(() => users.id).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   verifiedAt: timestamp("verified_at"),
