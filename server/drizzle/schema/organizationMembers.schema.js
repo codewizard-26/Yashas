@@ -1,24 +1,23 @@
-const {users} = require("./user.schema.js");
-const {organization} = require("./organization.schema.js");
-const {} = require("./");
-
+const {users} = require("./user.scehma.js");
+const {organizations} = require("./organization.schema.js");
+const {organizationRole} = require("./organizationRoles.schema.js");
+const {controlLevel} = require("./controlLevel.schema.js");
 const {
-  PgTable,
+  pgTable,
   uuid,
   date,
   boolean,
   timestamp,
-  
 } = require("drizzle-orm/pg-core");
 
 export const organizationMembers = pgTable("organizationMembers",{
   id: uuid("id").defaultRandom().primaryKey(),
-  userid: uuid("user_id").reference(() => users.id).notNull(),
-  organizationid: uuid("organization_id").reference(() => organization.id).notNull(),
-  organizationRoleid: uuid("organization_role_id").reference(() => organizationRole.id).notNull(),
-  controllevelid: uuid("control_level_id").reference(() => controlLevel.id).notNull(),
+  userId: uuid("user_id").references(() => users.id).notNull(),
+  organizationId: uuid("organization_id").references(() => organizations.id).notNull(),
+  organizationRoleId: uuid("organization_role_id").references(() => organizationRole.id).notNull(),
+  controllevelId: uuid("control_level_id").references(() => controlLevel.id).notNull(),
   startdate: date("start_date"),
   enddate: date("end_date"),
   isActive: boolean("is_active"),
   createdAt: timestamp("created_at").defaultNow(),
-})
+});
