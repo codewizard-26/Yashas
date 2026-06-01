@@ -21,3 +21,5 @@ const organizationMembers = pgTable("organizationMembers",{
   isActive: boolean("is_active"),
   createdAt: timestamp("created_at").defaultNow(),
 })
+
+module.exports = { organizationMembers };
