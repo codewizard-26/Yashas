@@ -14,4 +14,4 @@ const refreshTokens = pgTable("refresh_tokens", {
     expiresAt: timestamp("expires_at").notNull(),
 });
 
-module.exports = refreshTokens;
+module.exports = { refreshTokens };
