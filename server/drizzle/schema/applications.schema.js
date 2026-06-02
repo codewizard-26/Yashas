@@ -1,6 +1,6 @@
 const { jobs } = require("./jobs.schema");
 const { users } = require("./user.scehma");
-const { applicationStatuses } = require("./applicationStatatuses.schema");
+const { applicationStatuses } = require("./applicationStatuses.schema");
 
 const {
     pgTable,
