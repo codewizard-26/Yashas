@@ -1,13 +1,13 @@
-const db = require("../config/db");
-
-const { organizationTypes } = require("./schema/organizationType.schema");
-const { organizationRoles } = require("./schema/organizationRole.schema");
-const { controlLevels } = require("./schema/controlLevel.schema");
-const { userStatuses } = require("./schema/userStatus.schema");
-const { verificationStatuses } = require("./schema/verificationStatus.schema");
-const { organizationVerificationStatuses } = require("./schema/organizationVerificationStatus.schema");
-const { connectionStatuses } = require("./schema/connectionStatus.schema");
-const { applicationStatuses } = require("./schema/applicationStatus.schema");
+require("dotenv").config();
+const {db} = require("../config/db");
+const { organizationTypes } = require("./schema/organizationTypes.schema");
+const { organizationRole } = require("./schema/organizationRoles.schema");
+const { controlLevel } = require("./schema/controlLevel.schema");
+const { userStatuses } = require("./schema/userStatuses.schema");
+const { verificationStatuses } = require("./schema/verificationStatuses.schema");
+const { organizationVerificationStatuses } = require("./schema/organizationVerificationStatuses.schema");
+const { connectionStatuses } = require("./schema/connectionStatuses.schema");
+const { applicationStatuses } = require("./schema/applicationStatuses.schema");
 const { systemRoles } = require("./schema/systemRoles.schema");
 
 async function seed() {
@@ -43,7 +43,7 @@ async function seed() {
       ]).onConflictDoNothing();
 
     // Organization Roles
-    await db.insert(organizationRoles).values([
+    await db.insert(organizationRole).values([
         { roleName: "Student" },
         { roleName: "Intern" },
         { roleName: "Employee" },
@@ -54,7 +54,7 @@ async function seed() {
       ]).onConflictDoNothing();
 
     // Control Levels
-    await db.insert(controlLevels).values([
+    await db.insert(controlLevel).values([
         {
           levelName: "SuperAdmin",
           hierarchyRank: 1,
