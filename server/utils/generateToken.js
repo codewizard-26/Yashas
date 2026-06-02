@@ -2,7 +2,7 @@
 
 const jwt = require("jsonwebtoken");
 
-class token {
+class Token {
 
     generateAccessToken(payload) {
         return jwt.sign(
@@ -46,4 +46,4 @@ class token {
     }
 }
 
-module.exports = { token }
+module.exports = { Token }

@@ -2,8 +2,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { eq } = require("drizzle-orm");
 
-const db = require("../config/db");
-const { token } = require("../utils/generateToken");
+const {db} = require("../config/db");
+const { Token } = require("../utils/generateToken");
 
 const { users } = require("../drizzle/schema/user.scehma");
 const { refreshTokens } = require("../drizzle/schema/refreshToken.schema");
@@ -18,7 +18,7 @@ class AuthService {
             password,
             phone
         } = data;
-
+        
         const existingUser = await db.query.users.findFirst({
                 where: eq(users.email, email),
             });
@@ -30,9 +30,9 @@ class AuthService {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const [user] = await db.insert(users).values({
-                name,
+                fullName: name,
                 email,
-                password: hashedPassword,
+                passwordHash: hashedPassword,
                 phone,
             }).returning();
 
@@ -40,11 +40,12 @@ class AuthService {
             id: user.id,
             email: user.email,
         };
+        const token = new Token();
 
         const {
             accessToken,
             refreshToken,
-        } = this.generateTokenPair(payload);
+        } = token.generateTokenPair(payload);
 
         await db.insert(refreshTokens).values({
             userId: user.id,
