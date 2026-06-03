@@ -4,6 +4,7 @@ const {authMiddleware} = require("./middlewares/auth.middleware");
 
 // Route modules
 const authRoutes = require("./routes/auth.route");
+const profileRoutes = require("./routes/profile.route");
 
 // Public Router
 const publicRouter = express.Router();
@@ -19,6 +20,7 @@ publicRouter.use("/auth", authRoutes.public);
 
 //Private Routes
 privateRouter.use("/auth", authRoutes.private);
+privateRouter.use("/profile", profileRoutes);
 
 module.exports = {
     publicRouter,
