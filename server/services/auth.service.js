@@ -7,7 +7,7 @@ const { Token } = require("../utils/generateToken");
 
 const { users } = require("../drizzle/schema/user.scehma");
 const { refreshTokens } = require("../drizzle/schema/refreshToken.schema");
-
+const token = new Token();
 
 class AuthService {
 
@@ -40,7 +40,6 @@ class AuthService {
             id: user.id,
             email: user.email,
         };
-        const token = new Token();
 
         const {
             accessToken,
@@ -71,8 +70,9 @@ class AuthService {
         if (!user) {
             throw new Error("Invalid credentials");
         }
-
-        const validPassword = await bcrypt.compare(password, user.password);
+        console.log("password:", password);
+        console.log("user:", user);
+        const validPassword = await bcrypt.compare(password, user.passwordHash);
 
         if (!validPassword) {
             throw new Error("Invalid credentials");
@@ -86,7 +86,7 @@ class AuthService {
         const {
             accessToken,
             refreshToken,
-        } = this.generateTokenPair(payload);
+        } = token.generateTokenPair(payload);
 
         await db.insert(refreshTokens).values({
             userId: user.id,
@@ -105,10 +105,7 @@ class AuthService {
 
     async refresh(refreshToken) {
 
-        const decoded =
-            this.verifyRefreshToken(
-                refreshToken
-            );
+        const decoded = token.verifyRefreshToken( refreshToken );
 
         const tokenRecord = await db.query.refreshTokens.findFirst({
             where: eq(
@@ -121,7 +118,7 @@ class AuthService {
             throw new Error("Refresh token not found");
         }
 
-        const accessToken = this.generateAccessToken({
+        const accessToken = token.generateAccessToken({
             id: decoded.id,
             email: decoded.email,
         });
@@ -132,7 +129,7 @@ class AuthService {
     }
 
     async logout(refreshToken) {
-
+        console.log(refreshToken)
         await db.delete(refreshTokens).where(
             eq(
                 refreshTokens.token,

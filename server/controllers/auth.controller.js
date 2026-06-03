@@ -23,7 +23,7 @@ class AuthController {
 
     async refresh(req, res, next) {
         try {
-            const { refreshToken } = req.body;
+            const refreshToken = req.headers.authorization.split(" ")[1];
             const result =  AuthService.refresh(refreshToken);
             return res.status(200).json(result);
         } catch (error) {
@@ -33,7 +33,8 @@ class AuthController {
 
     async logout(req, res, next) {
         try {
-            const { refreshToken } = req.body;
+            const refreshToken = req.headers.authorization.split(" ")[1];
+            console.log(refreshToken);
             const result = await AuthService.logout(refreshToken);
             return res.status(200).json(result);
         } catch (error) {
