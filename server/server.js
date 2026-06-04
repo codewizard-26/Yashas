@@ -2,7 +2,10 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-
+const {
+    publicRouter,
+    privateRouter,
+} = require("./routeMap");
 const corsOptions = require("./config/cors");
 const { connectDB } = require("./config/db");
 
@@ -11,6 +14,10 @@ const app = express();
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// Routes
+app.use("/api", publicRouter);
+app.use("/api", privateRouter);
 
 // Test Route
 app.get("/", (req, res) => {

@@ -12,7 +12,7 @@ const {
 
 const organizations = pgTable("organizations", {
   id: uuid("id").defaultRandom().primaryKey(),
-  organozationTypeId: uuid("organization_type_id").references(() => organizationTypes.id).notNull(),
+  organizationTypeId: uuid("organization_type_id").references(() => organizationTypes.id).notNull(),
   parentOrganizationId: uuid("parent_organization_id").references(() => organizations.id),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255, }).unique().notNull(),

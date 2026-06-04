@@ -21,7 +21,7 @@ const users = pgTable("users", {
   projects: jsonb("projects", ),
   socialLinks: jsonb("social_links", ),
   aiProfile: jsonb("ai_profile", ),
-  userStatusId: uuid("user_status_id").references(() => userStatuses.id).notNull(),
+  userStatusId: uuid("user_status_id").references(() => userStatuses.id).default("2a3a7e29-5b3f-4b1d-88fa-0404e7e879ef"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
