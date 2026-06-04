@@ -1,4 +1,4 @@
-const { users } = require("./user.scehma");
+const {organizations } = require("./organization.schema");
 const {
     pgTable,
     uuid,
@@ -6,12 +6,12 @@ const {
     timestamp
 } = require("drizzle-orm/pg-core");;
 
-const refreshTokens = pgTable("refresh_tokens", {
+const organizationRefreshTokens = pgTable("organization_refresh_tokens", {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: uuid("user_id").references(() => users.id).notNull(),
+    organizationId: uuid("organization_id").references(() => organizations.id).notNull(),
     token: text("token").notNull(),
     createdAt: timestamp("created_at").defaultNow(),
     expiresAt: timestamp("expires_at").notNull(),
 });
 
-module.exports = {refreshTokens};
+module.exports = {organizationRefreshTokens};
