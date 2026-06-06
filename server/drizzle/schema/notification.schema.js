@@ -1,6 +1,3 @@
-import { time } from "drizzle-orm/mysql-core";
-import { messages } from "./messages.schema";
-
 const { users } = require("./user.scehma");
 const {
   pgTable,

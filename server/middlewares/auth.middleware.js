@@ -21,7 +21,7 @@ const authMiddleware = async ( req, res, next ) => {
         }
         
         const decoded = token.verifyAccessToken(accessToken)
-        console.log(decoded)
+        // console.log(decoded)
         req.user = decoded;
         
         next();

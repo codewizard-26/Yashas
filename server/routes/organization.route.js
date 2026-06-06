@@ -10,9 +10,8 @@ publicRouter.post("/login", OrganizationController.login);
 publicRouter.post("/refresh", OrganizationController.refresh);
 
 privateRouter.post("/logout", OrganizationController.logout);
-
 privateRouter.get("/me", OrganizationController.getMe);
-privateRouter.patch("/me", OrganizationController.updateMe);
+privateRouter.put("/update", OrganizationController.updateMe);
 
 module.exports = {
     public: publicRouter,

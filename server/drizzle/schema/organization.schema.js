@@ -23,7 +23,7 @@ const organizations = pgTable("organizations", {
   description: text("description").notNull(),
   website: text("website"),
   organizationVerificationStatusId: uuid("organization_verification_status_id").references(() => organizationVerificationStatuses.id).notNull(),
-  verifiedByUserId: uuid("verified_by_user_id").references(() => users.id).notNull(),
+  verifiedByUserId: uuid("verified_by_user_id").references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),
   verifiedAt: timestamp("verified_at"),
 });

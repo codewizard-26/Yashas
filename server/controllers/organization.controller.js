@@ -1,30 +1,61 @@
 const OrganizationService = require("../services/organization.service");
 
 class OrganizationController {
-    static async create(req, res, next) {
+    static async register(req, res, next) {
         try {
-            const organization = await OrganizationService.create(req.body);
+            const result = await OrganizationService.register(req.body);
 
-            return res.status(201).json(organization);
+            return res.status(201).json(result);
         } catch (error) {
             next(error);
         }
     }
 
-    static async getAll(req, res, next) {
+    static async login(req, res, next) {
         try {
-            const organizations = await OrganizationService.getAll();
+            const { email, password } = req.body;
 
-            return res.status(200).json(organizations);
+            const result = await OrganizationService.login(
+                email,
+                password
+            );
+
+            return res.status(200).json(result);
         } catch (error) {
             next(error);
         }
     }
 
-    static async getById(req, res, next) {
+    static async refresh(req, res, next) {
         try {
-            const organization = await OrganizationService.getById(
-                req.params.id
+            const refreshToken = req.headers.authorization.split(" ")[1];
+
+            const result = await OrganizationService.refresh( refreshToken );
+
+            return res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async logout(req, res, next) {
+        try {
+            const refreshToken = req.headers.authorization.split(" ")[1];
+            console.log(refreshToken)
+            const result = await OrganizationService.logout(
+                refreshToken
+            );
+
+            return res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async getMe(req, res, next) {
+        try {
+            const organization = await OrganizationService.getMe(
+                req.user.id
             );
 
             return res.status(200).json(organization);
@@ -33,24 +64,14 @@ class OrganizationController {
         }
     }
 
-    static async update(req, res, next) {
+    static async updateMe(req, res, next) {
         try {
-            const organization = await OrganizationService.update(
-                req.params.id,
+            const organization = await OrganizationService.updateMe(
+                req.user.id,
                 req.body
             );
 
             return res.status(200).json(organization);
-        } catch (error) {
-            next(error);
-        }
-    }
-
-    static async remove(req, res, next) {
-        try {
-            await OrganizationService.remove(req.params.id);
-
-            return res.status(204).send();
         } catch (error) {
             next(error);
         }
