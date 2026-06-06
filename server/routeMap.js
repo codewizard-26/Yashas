@@ -6,6 +6,8 @@ const {authMiddleware} = require("./middlewares/auth.middleware");
 const authRoutes = require("./routes/auth.route");
 const profileRoutes = require("./routes/profile.route");
 const organizationRoutes = require("./routes/organization.route");
+const jobRoutes = require("./routes/jobs.route");
+const organizationMemberRoutes = require("./routes/organizationMember.route");
 
 // Public Router
 const publicRouter = express.Router();
@@ -19,11 +21,14 @@ privateRouter.use(authMiddleware);
 // Public Routes
 publicRouter.use("/auth", authRoutes.public);
 publicRouter.use("/organization", organizationRoutes.public);
+publicRouter.use("/jobs", jobRoutes.public);
 
 //Private Routes
 privateRouter.use("/auth", authRoutes.private);
 privateRouter.use("/profile", profileRoutes);
 privateRouter.use("/organization", organizationRoutes.private);
+privateRouter.use("/organizationMember", organizationMemberRoutes.private);
+privateRouter.use("/job", jobRoutes.private);
 
 module.exports = {
     publicRouter,
