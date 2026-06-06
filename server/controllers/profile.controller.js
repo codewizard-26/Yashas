@@ -27,7 +27,23 @@ const updateMyProfile = async (req, res) => {
     }
 };
 
+const uploadProfileImage = async (req,res) => {
+    try{
+        const result = await ProfileService.uploadProfileImage(
+            req.user.id,
+            req.file,
+        );
+        
+        return res.status(200).json(result);
+    }catch(error){
+        return res.status(400).json({
+            message: error.message,
+        })
+    }
+}
+
 module.exports = {
     getMyProfile,
     updateMyProfile,
+    uploadProfileimage,
 };
