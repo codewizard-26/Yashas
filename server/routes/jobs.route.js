@@ -16,7 +16,7 @@ privateRouter.delete("/:jobId/apply", JobController.withdrawApplication);
 privateRouter.get("/my/applications", JobController.getMyApplications);
 
 /* ---------- Organization Routes ---------- */
-privateRouter.post("/", JobController.createJob);
+privateRouter.post("/create", JobController.createJob);
 privateRouter.get("/my/jobs", JobController.getMyJobs);
 privateRouter.patch("/:jobId", JobController.updateJob);
 privateRouter.delete("/:jobId", JobController.deleteJob);

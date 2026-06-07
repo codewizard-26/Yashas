@@ -24,7 +24,7 @@ class AuthController {
     async refresh(req, res, next) {
         try {
             const refreshToken = req.headers.authorization.split(" ")[1];
-            const result =  AuthService.refresh(refreshToken);
+            const result = await AuthService.refresh(refreshToken);
             return res.status(200).json(result);
         } catch (error) {
             next(error);

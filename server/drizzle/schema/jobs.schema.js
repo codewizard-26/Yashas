@@ -1,5 +1,5 @@
-const {organizationMembers} = require("./organizationMembers.schema");
-
+const {users} = require("./user.scehma");
+const {organizations} = require("./organization.schema");
 const {
     pgTable,
     uuid,
@@ -11,8 +11,8 @@ const {
 
 const jobs = pgTable("jobs",{
     id: uuid("id").defaultRandom().primaryKey(),
-    organizationId: uuid("organization_id").references(() => organizationMembers.id).notNull(),
-    postedbyMemberId: uuid("posted_by_member_id").references(() => organizationMembers.id),
+    organizationId: uuid("organization_id").references(() => organizations.id).notNull(),
+    postedbyMemberId: uuid("posted_by_member_id").references(() => users.id).notNull(),
     title: varchar("title",{length: 255,}).notNull(),
     description: text("description"),
     location: varchar("location",{length: 255,}),

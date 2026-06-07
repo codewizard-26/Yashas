@@ -1,8 +1,9 @@
 const {db} = require("../config/db");
 const { organizationMembers } = require("../drizzle/schema/organizationMembers.schema");
 const { users } = require("../drizzle/schema/user.scehma");
-const { organizationRole } = require("../drizzle/schema/organizationRoles.schema")
-const { controlLevel } = require("../drizzle/schema/controlLevel.schema")
+const { organizations } = require("../drizzle/schema/organization.schema");
+const { organizationRole } = require("../drizzle/schema/organizationRoles.schema");
+const { controlLevel } = require("../drizzle/schema/controlLevel.schema");
 const { eq, and } = require("drizzle-orm");
 
 class OrganizationMembersService {
@@ -89,17 +90,23 @@ class OrganizationMembersService {
     }
 
     static async getMyOrganizations(userId) {
+        const myOrganizations = await db
+        .select({
+            organizationId: organizationMembers.organizationId,
+            organizationName: organizations.name,
+        })
+        .from(organizationMembers)
+        .innerJoin(
+            organizations,
+            eq(organizationMembers.organizationId, organizations.id)
+        )
+        .where(eq(organizationMembers.userId, userId));
 
-        const organizations = await db
-            .select()
-            .from(organizationMembers)
-            .where(eq(organizationMembers.userId, userId));
-
-        return {
-            success: true,
-            status: 200,
-            data: organizations,
-        };
+    return {
+        success: true,
+        status: 200,
+        data: myOrganizations,
+    };
     }
 
     static async updateMember(req) {

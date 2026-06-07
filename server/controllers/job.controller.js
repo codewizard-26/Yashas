@@ -3,7 +3,7 @@ const JobService = require("../services/jobs.service");
 class JobController {
     static async createJob(req, res, next) {
         try {
-            const data = await JobService.createJob(req.user, req.body);
+            const data = await JobService.createJob(req);
             res.status(201).json(data);
         } catch (err) {
             next(err);

@@ -1,19 +1,89 @@
-const { eq } = require("drizzle-orm");
+const { eq, and } = require("drizzle-orm");
 
 const { db } = require("../config/db");
 const { jobs } = require("../drizzle/schema/jobs.schema");
+const { controlLevel } = require("../drizzle/schema/controlLevel.schema");
+const { organizations } = require("../drizzle/schema/organization.schema");
+const { organizationMembers } = require("../drizzle/schema/organizationMembers.schema");
 const { applications } = require("../drizzle/schema/applications.schema");
 
 class JobService {
 
-    static async createJob(organization, data) {
-        const [job] = await db.insert(jobs).values({
-            ...data,
-            organizationId: organization.id,
-            postedbyMemberId: organization.id,
-        }).returning();
+    static async createJob(req) {
+        const userId = req.user.id; // Set by auth middleware
 
-        return job;
+        const {
+            // organizationName,
+            organizationId,
+            title,
+            description,
+            location,
+            salary,
+            employmentType,
+            experienceRequired,
+            applicationDeadline,
+        } = req.body;
+
+        // Find organization by name
+        // const organization = await db.query.organizations.findFirst({
+        //     where: eq(organizations.name, organizationName),
+        // });
+
+        // if (!organization) {
+        //     return {
+        //         success: false,
+        //         status: 404,
+        //         message: "Organization not found",
+        //     };
+        // }
+
+        // Check if user belongs to the organization
+        const member = await db.query.organizationMembers.findFirst({
+            where: and(
+                eq(organizationMembers.userId, userId),
+                eq(organizationMembers.organizationId, organizationId)
+            ),
+        });
+
+        if (!member) {
+            throw new Error("Not a member");
+        }
+
+        const level = await db.query.controlLevel.findFirst({
+            where: eq(controlLevel.id, member.controllevelId),
+        });
+        
+        if (
+            level.levelName !== "Admin" &&
+            level.levelName !== "SuperAdmin"
+        ) {
+            throw new Error("Unauthorized");
+        }
+
+        // Create job
+        const [job] = await db
+            .insert(jobs)
+            .values({
+                organizationId,
+                postedbyMemberId: userId,
+                title,
+                description,
+                location,
+                salaryRange: salary,
+                requirements: {
+                    employmentType,
+                    experienceRequired,
+                },
+                applicationDeadline,
+            })
+            .returning();
+
+        return {
+            success: true,
+            status: 201,
+            message: "Job created successfully",
+            data: job,
+        };
     }
 
     static async getJobs() {
