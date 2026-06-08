@@ -25,6 +25,10 @@ class ProfileService {
 
 
     static async uploadProfileImage(userId, file) {
+
+        if(!file){
+            throw new Error("No file uploaded");
+        }
         const result = await cloudinary.uploader.upload(
             file.path,
             {
@@ -35,11 +39,15 @@ class ProfileService {
         await db
             .update(users)
             .set({
-                profileImage: result.secure_url,
+                profilePhoto: result.secure_url,
+                
             })
-            .where(eq(users.id,userId));
+            .where(eq(users.id,userId))
+            .returning();
             
         return{
+
+            user: updatedUser,
             imageUrl: result.secure_url,
         }    
 

@@ -29,6 +29,11 @@ const updateMyProfile = async (req, res) => {
 
 const uploadProfileImage = async (req,res) => {
     try{
+        if(!req.file){
+            return res.status(400).json({
+                message:"Image file is required",
+            });
+        }
         const result = await ProfileService.uploadProfileImage(
             req.user.id,
             req.file,
@@ -45,5 +50,5 @@ const uploadProfileImage = async (req,res) => {
 module.exports = {
     getMyProfile,
     updateMyProfile,
-    uploadProfileimage,
+    uploadProfileImage,
 };
