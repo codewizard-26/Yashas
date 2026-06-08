@@ -18,7 +18,7 @@ privateRouter.get("/my/applications", JobController.getMyApplications);
 /* ---------- Organization Routes ---------- */
 privateRouter.post("/create", JobController.createJob);
 privateRouter.get("/my/jobs", JobController.getMyJobs);
-privateRouter.patch("/:jobId", JobController.updateJob);
+privateRouter.put("/:jobId", JobController.updateJob);
 privateRouter.delete("/:jobId", JobController.deleteJob);
 privateRouter.patch("/:jobId/close", JobController.closeJob);
 privateRouter.patch("/:jobId/open", JobController.openJob);

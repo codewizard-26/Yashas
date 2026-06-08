@@ -106,22 +106,145 @@ class JobService {
         return job;
     }
 
-    static async updateJob(organization, jobId, data) {
+    static async updateJob(req) {
+        const userId = req.user.id;
+        const { jobId } = req.params;
 
-        const [job] = await db.update(jobs).set(data).where(eq(jobs.id, jobId)).returning();
+        const {
+            // organizationName,
+            organizationId,
+            title,
+            description,
+            location,
+            salary,
+            employmentType,
+            experienceRequired,
+            applicationDeadline,
+        } = req.body;
 
-        if (!job) {
-            throw new Error("Job not found");
+        // const organization = await db.query.organizations.findFirst({
+        //     where: eq(organizations.name, organizationName),
+        // });
+
+        // if (!organization) {
+        //     return {
+        //         success: false,
+        //         status: 404,
+        //         message: "Organization not found",
+        //     };
+        // }
+
+        const member = await db.query.organizationMembers.findFirst({
+            where: and(
+                eq(organizationMembers.userId, userId),
+                eq(organizationMembers.organizationId, organizationId)
+            ),
+        });
+
+        if (!member) {
+            throw new Error("Not a member");
         }
 
-        return job;
+        const level = await db.query.controlLevel.findFirst({
+            where: eq(controlLevel.id, member.controllevelId),
+        });
+
+        if (
+            level.levelName !== "Admin" &&
+            level.levelName !== "SuperAdmin"
+        ) {
+            throw new Error("Unauthorized");
+        }
+
+        const job = await db.query.jobs.findFirst({
+            where: and(
+                eq(jobs.id, jobId),
+                eq(jobs.organizationId, organizationId)
+            ),
+        });
+
+        if (!job) {
+            return {
+                success: false,
+                status: 404,
+                message: "Job not found",
+            };
+        }
+
+        const [updatedJob] = await db
+            .update(jobs)
+            .set({
+                ...(title && { title }),
+                ...(description && { description }),
+                ...(location && { location }),
+                ...(salary && { salaryRange: salary }),
+                ...(applicationDeadline && { applicationDeadline }),
+                ...((employmentType || experienceRequired) && {
+                    requirements: {
+                        ...job.requirements,
+                        ...(employmentType && { employmentType }),
+                        ...(experienceRequired && { experienceRequired }),
+                    },
+                }),
+            })
+            .where(eq(jobs.id, jobId))
+            .returning();
+
+        return {
+            success: true,
+            status: 200,
+            message: "Job updated successfully",
+            data: updatedJob,
+        };
     }
 
-    static async deleteJob( organization, jobId) {
+    static async deleteJob(req) {
+        const userId = req.user.id;
+        const { jobId } = req.params;
+        const { organizationId } = req.body;
+
+        const member = await db.query.organizationMembers.findFirst({
+            where: and(
+                eq(organizationMembers.userId, userId),
+                eq(organizationMembers.organizationId, organizationId)
+            ),
+        });
+
+        if (!member) {
+            throw new Error("Not a member");
+        }
+
+        const level = await db.query.controlLevel.findFirst({
+            where: eq(controlLevel.id, member.controllevelId),
+        });
+
+        if (
+            level.levelName !== "Admin" &&
+            level.levelName !== "SuperAdmin"
+        ) {
+            throw new Error("Unauthorized");
+        }
+
+        const job = await db.query.jobs.findFirst({
+            where: and(
+                eq(jobs.id, jobId),
+                eq(jobs.organizationId, organizationId)
+            ),
+        });
+
+        if (!job) {
+            return {
+                success: false,
+                status: 404,
+                message: "Job not found",
+            };
+        }
 
         await db.delete(jobs).where(eq(jobs.id, jobId));
 
         return {
+            success: true,
+            status: 200,
             message: "Job deleted successfully",
         };
     }

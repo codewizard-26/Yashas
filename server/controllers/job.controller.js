@@ -39,11 +39,7 @@ class JobController {
 
     static async updateJob(req, res, next) {
         try {
-            const data = await JobService.updateJob(
-                req.user,
-                req.params.jobId,
-                req.body
-            );
+            const data = await JobService.updateJob(req);
             res.status(200).json(data);
         } catch (err) {
             next(err);
