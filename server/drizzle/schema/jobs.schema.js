@@ -6,6 +6,7 @@ const {
     varchar,
     text,
     jsonb,
+    boolean,
     timestamp,
 } = require("drizzle-orm/pg-core");
 
@@ -18,6 +19,7 @@ const jobs = pgTable("jobs",{
     location: varchar("location",{length: 255,}),
     salaryRange: jsonb("salary_range"),
     requirements: jsonb("requirements"),
+    isOpen: boolean("is_open").default(true).notNull(),
     appllicationDeadline: timestamp("application_deadline"),
     createdAt: timestamp("created_at").defaultNow(),
 });

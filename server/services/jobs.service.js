@@ -201,12 +201,25 @@ class JobService {
     static async deleteJob(req) {
         const userId = req.user.id;
         const { jobId } = req.params;
-        const { organizationId } = req.body;
 
+        // Find the job
+        const job = await db.query.jobs.findFirst({
+            where: eq(jobs.id, jobId),
+        });
+
+        if (!job) {
+            return {
+                success: false,
+                status: 404,
+                message: "Job not found",
+            };
+        }
+
+        // Check if user is a member of the organization that owns the job
         const member = await db.query.organizationMembers.findFirst({
             where: and(
                 eq(organizationMembers.userId, userId),
-                eq(organizationMembers.organizationId, organizationId)
+                eq(organizationMembers.organizationId, job.organizationId)
             ),
         });
 
@@ -214,6 +227,7 @@ class JobService {
             throw new Error("Not a member");
         }
 
+        // Check control level
         const level = await db.query.controlLevel.findFirst({
             where: eq(controlLevel.id, member.controllevelId),
         });
@@ -225,11 +239,23 @@ class JobService {
             throw new Error("Unauthorized");
         }
 
+        // Delete the job
+        await db.delete(jobs).where(eq(jobs.id, jobId));
+
+        return {
+            success: true,
+            status: 200,
+            message: "Job deleted successfully",
+        };
+    }
+
+    static async closeJob(req) {
+        const userId = req.user.id;
+        const { jobId } = req.params;
+
+        // Find the job
         const job = await db.query.jobs.findFirst({
-            where: and(
-                eq(jobs.id, jobId),
-                eq(jobs.organizationId, organizationId)
-            ),
+            where: eq(jobs.id, jobId),
         });
 
         if (!job) {
@@ -240,31 +266,95 @@ class JobService {
             };
         }
 
-        await db.delete(jobs).where(eq(jobs.id, jobId));
+        // Check if user is a member of the organization
+        const member = await db.query.organizationMembers.findFirst({
+            where: and(
+                eq(organizationMembers.userId, userId),
+                eq(organizationMembers.organizationId, job.organizationId)
+            ),
+        });
+
+        if (!member) {
+            throw new Error("Not a member");
+        }
+
+        // Check control level
+        const level = await db.query.controlLevel.findFirst({
+            where: eq(controlLevel.id, member.controllevelId),
+        });
+
+        if (
+            level.levelName !== "Admin" &&
+            level.levelName !== "SuperAdmin"
+        ) {
+            throw new Error("Unauthorized");
+        }
+
+        // Close the job
+        await db
+            .update(jobs)
+            .set({ isOpen: false })
+            .where(eq(jobs.id, jobId));
 
         return {
             success: true,
             status: 200,
-            message: "Job deleted successfully",
+            message: "Job closed successfully",
         };
     }
 
-    static async closeJob(organization, jobId) {
+    static async openJob(req) {
+        const userId = req.user.id;
+        const { jobId } = req.params;
 
-        const [job] = await db.update(jobs).set({
-            appllicationDeadline: new Date(),
-        }).where(eq(jobs.id, jobId)).returning();
+        // Find the job
+        const job = await db.query.jobs.findFirst({
+            where: eq(jobs.id, jobId),
+        });
 
-        return job;
-    }
+        if (!job) {
+            return {
+                success: false,
+                status: 404,
+                message: "Job not found",
+            };
+        }
 
-    static async openJob(organization, jobId) {
+        // Check if user is a member of the organization
+        const member = await db.query.organizationMembers.findFirst({
+            where: and(
+                eq(organizationMembers.userId, userId),
+                eq(organizationMembers.organizationId, job.organizationId)
+            ),
+        });
 
-        const [job] = await db.update(jobs).set({
-            appllicationDeadline: null,
-        }).where(eq(jobs.id, jobId)).returning();
+        if (!member) {
+            throw new Error("Not a member");
+        }
 
-        return job;
+        // Check control level
+        const level = await db.query.controlLevel.findFirst({
+            where: eq(controlLevel.id, member.controllevelId),
+        });
+
+        if (
+            level.levelName !== "Admin" &&
+            level.levelName !== "SuperAdmin"
+        ) {
+            throw new Error("Unauthorized");
+        }
+
+        // Open the job
+        await db
+            .update(jobs)
+            .set({ isOpen: true })
+            .where(eq(jobs.id, jobId));
+
+        return {
+            success: true,
+            status: 200,
+            message: "Job opened successfully",
+        };
     }
 
     static async applyForJob(user, jobId, data) {

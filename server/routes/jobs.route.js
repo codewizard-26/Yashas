@@ -20,10 +20,10 @@ privateRouter.post("/create", JobController.createJob);
 privateRouter.get("/my/jobs", JobController.getMyJobs);
 privateRouter.put("/:jobId", JobController.updateJob);
 privateRouter.delete("/:jobId", JobController.deleteJob);
-privateRouter.patch("/:jobId/close", JobController.closeJob);
-privateRouter.patch("/:jobId/open", JobController.openJob);
+privateRouter.put("/:jobId/close", JobController.closeJob);
+privateRouter.put("/:jobId/open", JobController.openJob);
 privateRouter.get("/:jobId/applications", JobController.getJobApplications);
-privateRouter.patch("/:jobId/applications/:applicationId", JobController.updateApplicationStatus);
+privateRouter.put("/:jobId/applications/:applicationId", JobController.updateApplicationStatus);
 
 module.exports = {
     public: publicRouter,

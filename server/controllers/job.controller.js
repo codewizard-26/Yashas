@@ -48,10 +48,7 @@ class JobController {
 
     static async deleteJob(req, res, next) {
         try {
-            const data = await JobService.deleteJob(
-                req.user,
-                req.params.jobId
-            );
+            const data = await JobService.deleteJob(req);
             res.status(200).json(data);
         } catch (err) {
             next(err);
@@ -60,10 +57,7 @@ class JobController {
 
     static async closeJob(req, res, next) {
         try {
-            const data = await JobService.closeJob(
-                req.user,
-                req.params.jobId
-            );
+            const data = await JobService.closeJob(req);
             res.status(200).json(data);
         } catch (err) {
             next(err);
@@ -72,10 +66,7 @@ class JobController {
 
     static async openJob(req, res, next) {
         try {
-            const data = await JobService.openJob(
-                req.user,
-                req.params.jobId
-            );
+            const data = await JobService.openJob(req);
             res.status(200).json(data);
         } catch (err) {
             next(err);
