@@ -1,7 +1,7 @@
 const {db} = require("../config/db");
 const { users } = require("../drizzle/schema");
 const { eq } = require("drizzle-orm");
-const cloudinary = require("../utils/cloudinary")
+const cloudinary = require("../config/cloudinary")
 
 class ProfileService {
     static async getMyProfile(userId) {
@@ -47,7 +47,7 @@ class ProfileService {
             
         return{
 
-            user: updatedUser,
+            
             imageUrl: result.secure_url,
         }    
 
