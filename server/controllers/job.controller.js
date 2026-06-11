@@ -111,10 +111,7 @@ class JobController {
 
     static async getJobApplications(req, res, next) {
         try {
-            const data = await JobService.getJobApplications(
-                req.user,
-                req.params.jobId
-            );
+            const data = await JobService.getJobApplications(req);
             res.status(200).json(data);
         } catch (err) {
             next(err);
@@ -123,12 +120,7 @@ class JobController {
 
     static async updateApplicationStatus(req, res, next) {
         try {
-            const data = await JobService.updateApplicationStatus(
-                req.user,
-                req.params.jobId,
-                req.params.applicationId,
-                req.body
-            );
+            const data = await JobService.updateApplicationStatus(req);
             res.status(200).json(data);
         } catch (err) {
             next(err);

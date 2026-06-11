@@ -467,38 +467,124 @@ class JobService {
 
     }
 
-    static async getJobApplications(organization, jobId) {
+    static async getJobApplications(req) {
+        const userId = req.user.id;
+        const { jobId } = req.params;
 
-        return await db.query.applications.findMany({
-            where: eq(
-                applications.jobId,
-                jobId
+        // Find the job
+        const job = await db.query.jobs.findFirst({
+            where: eq(jobs.id, jobId),
+        });
+
+        if (!job) {
+            return {
+                success: false,
+                status: 404,
+                message: "Job not found",
+            };
+        }
+
+        // Check if the user is a member of the organization
+        const member = await db.query.organizationMembers.findFirst({
+            where: and(
+                eq(organizationMembers.userId, userId),
+                eq(organizationMembers.organizationId, job.organizationId)
             ),
         });
 
-    }
-
-    static async updateApplicationStatus( organization, jobId, applicationId, data ) {
-
-        const [application] = await db .update(applications) .set({
-            applicationStatusId:
-            data.applicationStatusId,
-        }).where(
-            eq(
-                applications.id,
-                applicationId
-            )
-        ).returning();
-
-        if (!application) {
-            throw new Error(
-                "Application not found"
-            );
+        if (!member) {
+            throw new Error("Not a member");
         }
 
-        return application;
+        // Check control level
+        const level = await db.query.controlLevel.findFirst({
+            where: eq(controlLevel.id, member.controllevelId),
+        });
+
+        if (
+            level.levelName !== "Admin" &&
+            level.levelName !== "SuperAdmin"
+        ) {
+            throw new Error("Unauthorized");
+        }
+
+        // Get all applications for the job
+        const jobApplications = await db.query.applications.findMany({
+            where: eq(applications.jobId, jobId),
+        });
+
+        return {
+            success: true,
+            status: 200,
+            data: jobApplications,
+        };
     }
 
-}
+    static async updateApplicationStatus(req) {
+        const userId = req.user.id;
+        const { jobId, applicationId } = req.params;
+        const { applicationStatusId } = req.body;
 
+        // Find the job
+        const job = await db.query.jobs.findFirst({
+            where: eq(jobs.id, jobId),
+        });
+
+        if (!job) {
+            return {
+                success: false,
+                status: 404,
+                message: "Job not found",
+            };
+        }
+
+        // Check if user is a member of the organization
+        const member = await db.query.organizationMembers.findFirst({
+            where: and(
+                eq(organizationMembers.userId, userId),
+                eq(organizationMembers.organizationId, job.organizationId)
+            ),
+        });
+
+        if (!member) {
+            throw new Error("Not a member");
+        }
+
+        // Check control level
+        const level = await db.query.controlLevel.findFirst({
+            where: eq(controlLevel.id, member.controllevelId),
+        });
+
+        if (
+            level.levelName !== "Admin" &&
+            level.levelName !== "SuperAdmin"
+        ) {
+            throw new Error("Unauthorized");
+        }
+
+        // Update application status
+        const [application] = await db
+            .update(applications)
+            .set({
+                applicationStatusId,
+            })
+            .where(eq(applications.id, applicationId))
+            .returning();
+
+        if (!application) {
+            return {
+                success: false,
+                status: 404,
+                message: "Application not found",
+            };
+        }
+
+        return {
+            success: true,
+            status: 200,
+            message: "Application status updated successfully",
+            data: application,
+        };
+    };
+};
 module.exports = JobService;
