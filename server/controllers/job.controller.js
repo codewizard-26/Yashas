@@ -75,11 +75,7 @@ class JobController {
 
     static async applyForJob(req, res, next) {
         try {
-            const data = await JobService.applyForJob(
-                req.user,
-                req.params.jobId,
-                req.body
-            );
+            const data = await JobService.applyForJob(req);
             res.status(201).json(data);
         } catch (err) {
             next(err);
@@ -88,10 +84,7 @@ class JobController {
 
     static async withdrawApplication(req, res, next) {
         try {
-            const data = await JobService.withdrawApplication(
-                req.user,
-                req.params.jobId
-            );
+            const data = await JobService.withdrawApplication(req);
             res.status(200).json(data);
         } catch (err) {
             next(err);
@@ -100,7 +93,7 @@ class JobController {
 
     static async getMyApplications(req, res, next) {
         try {
-            const data = await JobService.getMyApplications(req.user);
+            const data = await JobService.getMyApplications(req);
             res.status(200).json(data);
         } catch (err) {
             next(err);

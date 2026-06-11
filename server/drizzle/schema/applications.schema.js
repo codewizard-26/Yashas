@@ -5,7 +5,6 @@ const { applicationStatuses } = require("./applicationStatuses.schema");
 const {
     pgTable,
     uuid,
-    text,
     timestamp,
 } = require("drizzle-orm/pg-core");
 
@@ -14,7 +13,6 @@ const applications = pgTable("applications",{
     jobId: uuid("job_id").references(() => jobs.id).notNull(),
     userId: uuid("user_id").references(() => users.id).notNull(),
     applicationStatusId: uuid("application_status_id").references(() => applicationStatuses.id).notNull(),
-    resumeURL: text("resume_url"),
     appliedAt: timestamp("applied_at").defaultNow(),
 });
 

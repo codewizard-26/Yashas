@@ -357,36 +357,103 @@ class JobService {
         };
     }
 
-    static async applyForJob(user, jobId, data) {
+    static async applyForJob(req) {
+        const userId = req.user.id;
+        const { jobId } = req.params;
 
-        const [application] = await db.insert(applications).values({
+        // Check if job exists
+        const job = await db.query.jobs.findFirst({
+            where: eq(jobs.id, jobId),
+        });
+
+        if (!job) {
+            return {
+                success: false,
+                status: 404,
+                message: "Job not found",
+            };
+        }
+
+        if (!job.isOpen) {
+            return {
+                success: false,
+                status: 400,
+                message: "Job is closed",
+            };
+        }
+
+        // Check if already applied
+        const existing = await db.query.applications.findFirst({
+            where: and(
+                eq(applications.userId, userId),
+                eq(applications.jobId, jobId)
+            ),
+        });
+
+        if (existing) {
+            return {
+                success: false,
+                status: 400,
+                message: "Already applied for this job",
+            };
+        }
+
+        // Create application
+        await db.insert(applications).values({
+            userId,
             jobId,
-            userId: user.id,
-            applicationStatusId:
-            data.applicationStatusId,
-            resumeURL: data.resumeURL,
-        }).returning();
-
-        return application;
-    }
-
-    static async withdrawApplication(user, jobId) {
-        await db.delete(applications).where(eq(applications.jobId, jobId));
+            applicationStatusId: "7bc16a92-d78a-42c8-b436-db483e4f427a",
+        });
 
         return {
+            success: true,
+            status: 201,
+            message: "Application submitted successfully",
+        };
+    }
+
+    static async withdrawApplication(req) {
+        const userId = req.user.id;
+        const { jobId } = req.params;
+
+        const application = await db.query.applications.findFirst({
+            where: and(
+                eq(applications.userId, userId),
+                eq(applications.jobId, jobId)
+            ),
+        });
+
+        if (!application) {
+            return {
+                success: false,
+                status: 404,
+                message: "Application not found",
+            };
+        }
+
+        await db
+            .delete(applications)
+            .where(eq(applications.id, application.id));
+
+        return {
+            success: true,
+            status: 200,
             message: "Application withdrawn successfully",
         };
     }
 
-    static async getMyApplications(user) {
+    static async getMyApplications(req) {
+        const userId = req.user.id;
 
-        return await db.query.applications.findMany({
-            where: eq(
-                applications.userId,
-                user.id
-            ),
+        const myApplications = await db.query.applications.findMany({
+            where: eq(applications.userId, userId),
         });
 
+        return {
+            success: true,
+            status: 200,
+            data: myApplications,
+        };
     }
 
     static async getMyJobs(organization) {
