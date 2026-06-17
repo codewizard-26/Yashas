@@ -6,6 +6,7 @@ const { controlLevel } = require("../drizzle/schema/controlLevel.schema");
 const { organizations } = require("../drizzle/schema/organization.schema");
 const { organizationMembers } = require("../drizzle/schema/organizationMembers.schema");
 const { applications } = require("../drizzle/schema/applications.schema");
+const { generateNotification } = require("../utils/generateNotification");
 
 class JobService {
 
@@ -399,10 +400,25 @@ class JobService {
         }
 
         // Create application
-        await db.insert(applications).values({
-            userId,
-            jobId,
-            applicationStatusId: "7bc16a92-d78a-42c8-b436-db483e4f427a",
+        const [application] = await db
+            .insert(applications)
+            .values({
+                userId,
+                jobId,
+                applicationStatusId: "7bc16a92-d78a-42c8-b436-db483e4f427a",
+            })
+            .returning();
+
+        await generateNotification({
+            userId: job.postedbyMemberId,
+            actorId: userId,
+            notificationType: "JOB",
+            title: "New Job Application",
+            message: "A new application has been submitted for your job.",
+            metadata: {
+                jobId,
+                applicationId: application.id,
+            },
         });
 
         return {
@@ -578,6 +594,19 @@ class JobService {
                 message: "Application not found",
             };
         }
+
+        await generateNotification({
+            userId: application.userId,
+            actorId: userId,
+            notificationType: "JOB",
+            title: "Application Status Updated",
+            message: "Your application status has been updated.",
+            metadata: {
+                jobId,
+                applicationId,
+                applicationStatusId,
+            },
+        });
 
         return {
             success: true,

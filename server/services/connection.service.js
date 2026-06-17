@@ -1,6 +1,7 @@
 const { db } = require("../config/db");
 const { connections } = require("../drizzle/schema/connections.schema");
-const { users } = require("../drizzle/schema/user.scehma");
+const { users } = require("../drizzle/schema/user.schema");
+const { generateNotification } = require("../utils/generateNotification");
 const { eq, and, or } = require("drizzle-orm");
 
 class ConnectionService {
@@ -47,6 +48,17 @@ class ConnectionService {
             })
             .returning();
 
+        await generateNotification({
+            userId: receiverId,
+            actorId: senderId,
+            notificationType: "CONNECTION",
+            title: "New Connection Request",
+            message: "You have received a new connection request.",
+            metadata: {
+                connectionId: connection.id,
+            },
+        });
+
         return {
             success: true,
             message: "Connection request sent",
@@ -57,7 +69,6 @@ class ConnectionService {
     static async acceptRequest(req) {
         const userId = req.user.id;
         const { connectionId } = req.params;
-        // const { connectionStatusId } = req.body;
 
         const connection = await db.query.connections.findFirst({
             where: eq(connections.id, connectionId),
@@ -90,6 +101,17 @@ class ConnectionService {
             .where(eq(connections.id, connectionId))
             .returning();
 
+        await generateNotification({
+            userId: connection.senderId,
+            actorId: userId,
+            notificationType: "CONNECTION",
+            title: "Connection Request Accepted",
+            message: "Your connection request has been accepted.",
+            metadata: {
+                connectionId: updated.id,
+            },
+        });
+
         return {
             success: true,
             message: "Connection accepted",
@@ -100,7 +122,6 @@ class ConnectionService {
     static async rejectRequest(req) {
         const userId = req.user.id;
         const { connectionId } = req.params;
-        // const { connectionStatusId } = req.body;
 
         const connection = await db.query.connections.findFirst({
             where: eq(connections.id, connectionId),
@@ -132,6 +153,17 @@ class ConnectionService {
             })
             .where(eq(connections.id, connectionId))
             .returning();
+
+        await generateNotification({
+            userId: connection.senderId,
+            actorId: userId,
+            notificationType: "CONNECTION",
+            title: "Connection Request Rejected",
+            message: "Your connection request has been rejected.",
+            metadata: {
+                connectionId: updated.id,
+            },
+        });
 
         return {
             success: true,

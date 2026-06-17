@@ -5,7 +5,7 @@ const { eq } = require("drizzle-orm");
 const {db} = require("../config/db");
 const { Token } = require("../utils/generateToken");
 
-const { users } = require("../drizzle/schema/user.scehma");
+const { users } = require("../drizzle/schema/user.schema");
 const { refreshTokens } = require("../drizzle/schema/refreshToken.schema");
 const token = new Token();
 
