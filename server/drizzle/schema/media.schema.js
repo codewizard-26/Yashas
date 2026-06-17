@@ -1,5 +1,5 @@
 const { events } = require("./events.schema");
-const { users } = require("./user.scehma");
+const { users } = require("./user.schema");
 const {
   pgTable,
   uuid,

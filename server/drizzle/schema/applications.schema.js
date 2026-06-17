@@ -1,5 +1,5 @@
 const { jobs } = require("./jobs.schema");
-const { users } = require("./user.scehma");
+const { users } = require("./user.schema");
 const { applicationStatuses } = require("./applicationStatuses.schema");
 
 const {

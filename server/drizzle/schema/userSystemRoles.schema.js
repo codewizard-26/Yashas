@@ -1,4 +1,4 @@
-const { users } = require("./user.scehma");
+const { users } = require("./user.schema");
 const { systemRoles } = require("./systemRoles.schema")
 const {
   pgTable,

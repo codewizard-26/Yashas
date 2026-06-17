@@ -1,4 +1,4 @@
-const {users} = require("./user.scehma.js");
+const {users} = require("./user.schema.js");
 const {organizations} = require("./organization.schema.js");
 const {organizationRole} = require("./organizationRoles.schema.js");
 const {controlLevel} = require("./controlLevel.schema.js");

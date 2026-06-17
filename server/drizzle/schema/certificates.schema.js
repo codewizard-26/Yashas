@@ -1,4 +1,4 @@
-const {users} = require("./user.scehma.js");
+const {users} = require("./user.schema.js");
 const {organizations} = require("./organization.schema.js");
 const {verificationStatuses} = require("./verificationStatuses.schema.js")
 const {

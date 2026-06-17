@@ -1,5 +1,5 @@
 const { connectionStatuses } = require("./connectionStatuses.schema");
-const { users } = require("./user.scehma");
+const { users } = require("./user.schema");
 const {
   pgTable,
   uuid,

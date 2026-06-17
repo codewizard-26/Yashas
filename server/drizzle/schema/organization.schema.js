@@ -1,6 +1,6 @@
 const { organizationTypes } = require("./organizationTypes.schema");
 const { organizationVerificationStatuses } = require("./organizationVerificationStatuses.schema");
-const { users } = require("./user.scehma");
+const { users } = require("./user.schema");
 const {
   pgTable,
   uuid,
