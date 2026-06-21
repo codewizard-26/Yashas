@@ -12,7 +12,7 @@ async function generateNotification({
     message,
     metadata = null,
 }) {
-
+    
     const type = await db.query.notificationTypes.findFirst({
         where: eq(notificationTypes.name, notificationType),
     });

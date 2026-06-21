@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth.route");
 const profileRoutes = require("./routes/profile.route");
 const connectionRoutes = require("./routes/connection.route");
 const organizationRoutes = require("./routes/organization.route");
+const notificationRoutes = require("./routes/notification.route");
 const jobRoutes = require("./routes/jobs.route");
 const organizationMemberRoutes = require("./routes/organizationMember.route");
 const connectionRoute = require("./routes/connection.route");
@@ -31,6 +32,7 @@ privateRouter.use("/profile", profileRoutes);
 privateRouter.use("/connection", connectionRoutes.private);
 privateRouter.use("/organization", organizationRoutes.private);
 privateRouter.use("/organizationMember", organizationMemberRoutes.private);
+privateRouter.use("/notifications", notificationRoutes.private)
 privateRouter.use("/job", jobRoutes.private);
 
 module.exports = {

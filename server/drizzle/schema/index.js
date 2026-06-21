@@ -12,6 +12,7 @@ const { jobs } = require("./jobs.schema");
 const { media } = require("./media.schema");
 const { messages } = require("./messages.schema");
 const { notifications } = require("./notification.schema");
+const { notificationTypes } = require("./notificationType.schema")
 const { organizations } = require("./organization.schema");
 const { organizationMembers } = require("./organizationMembers.schema");
 const { organizationRefreshTokens } = require("./organizationRefreshToken.schema");
@@ -41,6 +42,7 @@ module.exports = {
     media,
     messages,
     notifications,
+    notificationTypes,
     organizations,
     organizationMembers,
     organizationRefreshTokens,
