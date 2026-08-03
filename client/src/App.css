@@ -1,1 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #f8f9ff;
+    color: #0b1c30;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Stitch Design System - Glass panel & Light Color Palette */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.05);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(53, 37, 205, 0.3);
+  box-shadow: 0 16px 36px rgba(53, 37, 205, 0.12);
+}
+
+/* Compatibility aliases for light Stitch design */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(229, 238, 255, 0.8);
+  box-shadow: 0 8px 24px rgba(53, 37, 205, 0.06);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(53, 37, 205, 0.3);
+  box-shadow: 0 14px 32px rgba(53, 37, 205, 0.12);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(229, 238, 255, 0.8);
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #3525cd 0%, #00687a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-primary {
+  background: linear-gradient(135deg, #3525cd 0%, #00687a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-unstop {
+  background: linear-gradient(135deg, #3525cd 0%, #7c3aed 50%, #00687a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-gold {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.badge-verified {
+  background-color: rgba(0, 104, 122, 0.1);
+  color: #00687a;
+  border: 1px solid rgba(0, 104, 122, 0.2);
+}
+
+.badge-primary {
+  background-color: rgba(53, 37, 205, 0.1);
+  color: #3525cd;
+  border: 1px solid rgba(53, 37, 205, 0.2);
+}
+
+.verified-glow {
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+}
+
+.pending-glow {
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 8s linear infinite;
+}
+
+.hide-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

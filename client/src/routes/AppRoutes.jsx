@@ -1,28 +1,42 @@
-import { Routes, Route } from "react-router-dom";
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import LoginPage from "../features/auth/pages/LoginPage";
-import RegisterPage from "../features/auth/pages/RegisterPage";
-import DashboardPage from "../features/dashboard/pages/DashboardPage";
-import PrivateRoute from "./PrivateRoute";
+import DashboardLayout from "../shared/layouts/DashboardLayout/DashboardLayout";
+import DashboardOverview from "../features/dashboard/pages/DashboardOverview";
+import StudentPortfolio from "../features/profile/StudentPortfolio";
+import CertificateVault from "../features/certificates/CertificateVault";
+import EventPassport from "../features/events/EventPassport";
+import JobsBoard from "../features/jobs/JobsBoard";
+import MessagingPage from "../features/messaging/MessagingPage";
+import NotificationsPage from "../features/notifications/NotificationsPage";
+import CommunityPage from "../features/community/CommunityPage";
+import InstitutionsPage from "../features/institutions/InstitutionsPage";
+import VerificationDesk from "../features/verification/VerificationDesk";
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+      {/* Root redirect to dashboard overview */}
+      <Route path="/" element={<Navigate to="/dashboard/overview" replace />} />
 
-      <Route
-        path="/register"
-        element={<RegisterPage />}
-      />
+      {/* Main Dashboard Layout and Routes */}
+      <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route index element={<Navigate to="/dashboard/overview" replace />} />
+        <Route path="overview" element={<DashboardOverview />} />
+        <Route path="portfolio" element={<StudentPortfolio />} />
+        <Route path="certificates" element={<CertificateVault />} />
+        <Route path="events" element={<EventPassport />} />
+        <Route path="jobs" element={<JobsBoard />} />
+        <Route path="messaging" element={<MessagingPage />} />
+        <Route path="messages" element={<MessagingPage />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="community" element={<CommunityPage />} />
+        <Route path="institutions" element={<InstitutionsPage />} />
+        <Route path="verification" element={<VerificationDesk />} />
+      </Route>
 
-      <Route
-        path="/dashboard"
-        element={
-          <PrivateRoute>
-            <DashboardPage />
-          </PrivateRoute>
-        }
-      />
+      {/* Catch-all fallback */}
+      <Route path="*" element={<Navigate to="/dashboard/overview" replace />} />
     </Routes>
   );
 }
